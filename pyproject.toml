@@ -1,0 +1,11 @@
+[project]
+name = "py-mini-compiler"
+version = "0.1.0"
+description = "从零手写 Mini-C 编译器前端与 AST 代码生成器 (闭环链接 toy-cpu-vm)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
