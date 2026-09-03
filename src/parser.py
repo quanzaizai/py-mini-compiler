@@ -73,11 +73,22 @@ class Parser:
         else:
             raise SyntaxError(f"语法错误 (第 {self._peek().line} 行): 无法解析的语句 '{self._peek().value}'")
 
+    # ==========================================================================
+    # 📐 核心算法：四则运算与优先级文法分层 (Grammar Precedence Hierarchy)
+    # 文法规则越往下，调用栈越深，优先级越高！
+    # 1. Comparison: == != < > <= >= (最低优先级)
+    # 2. Additive:   + -
+    # 3. Multiplicative: * /
+    # 4. Primary:    数字, 变量, (expr) (最高优先级)
+    # ==========================================================================
+
     def _parse_expression(self) -> ASTNode:
         return self._parse_comparison()
 
     def _parse_comparison(self) -> ASTNode:
+        # 先解析左侧可能存在的加减乘除表达式
         left = self._parse_additive()
+        # 只要后面连续跟着比较符号，就构建出比较判断二叉节点
         while self._peek().type in (TokenType.EQ, TokenType.NE, TokenType.LT, TokenType.GT, TokenType.LE, TokenType.GE):
             op_token = self._advance()
             right = self._parse_additive()
@@ -85,6 +96,7 @@ class Parser:
         return left
 
     def _parse_additive(self) -> ASTNode:
+        # 加法前必须先解析高优先级的乘除法 (如 1 + 2 * 3 中，先让 2 * 3 抱团)
         left = self._parse_multiplicative()
         while self._peek().type in (TokenType.PLUS, TokenType.MINUS):
             op_token = self._advance()
@@ -93,6 +105,7 @@ class Parser:
         return left
 
     def _parse_multiplicative(self) -> ASTNode:
+        # 乘法前必须先解析最底层的不可分割基元 (数字、变量或括号)
         left = self._parse_primary()
         while self._peek().type in (TokenType.MUL, TokenType.DIV):
             op_token = self._advance()
@@ -101,11 +114,13 @@ class Parser:
         return left
 
     def _parse_primary(self) -> ASTNode:
+        # 最高优先级：叶子节点或被括号强行提权的子表达式
         if self._match(TokenType.NUMBER):
             return NumberNode(int(self._previous().value))
         elif self._match(TokenType.IDENTIFIER):
             return VariableNode(self._previous().value)
         elif self._match(TokenType.LPAREN):
+            # 遇到左括号 '('：递归回退到最高层 _parse_expression() 解析内部算式
             expr = self._parse_expression()
             self._consume(TokenType.RPAREN, "期望闭合括号 ')'")
             return expr

@@ -2,16 +2,20 @@
 
 所属专业课：《编译原理》《计算机体系结构与指令系统》
 
+> 🌟 **【零基础自学必读】**：想知道编译器如何把英文代码变成 AST 语法树？为什么 Clang/Rust 官方前端全选手写递归下降？如何从零生成汇编并在虚拟 CPU 上闭环跑通 1 到 100 累加？请先阅读保姆级设计手册：  
+> 👉 **[📘 零基础编译原理与全链路手写指南 (ARCHITECTURE_AND_DESIGN.md)](./ARCHITECTURE_AND_DESIGN.md)**
+
 ---
 
 ## 📖 工程目录结构
 
 ```text
 py-mini-compiler/
-├── src/           # 编译器各阶段源码 (词法 / 语法 / AST / 代码生成)
-├── tests/         # 软硬件闭环全链路自动化测试
-├── pyproject.toml # 项目配置
-└── README.md      # 项目说明文档
+├── ARCHITECTURE_AND_DESIGN.md  # 🌟 零基础编译原理与全链路手写指南
+├── src/                        # 编译器各阶段源码 (词法 / 语法 / AST / 代码生成)
+├── tests/                      # 软硬件闭环全链路自动化测试
+├── pyproject.toml              # 项目配置
+└── README.md                   # 项目说明文档
 ```
 
 ---
